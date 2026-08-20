@@ -1,0 +1,4411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hallify | Function Hall Slot Booking</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    background:#f7f8fc;
+    color:#182033;
+    overflow-x:hidden;
+}
+
+body.modal-open{
+    overflow:hidden;
+}
+
+button,
+input,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+:root{
+    --primary:#6c4df6;
+    --primary-dark:#5034d8;
+    --secondary:#ff6584;
+    --dark:#182033;
+    --muted:#687083;
+    --white:#ffffff;
+    --light:#f7f8fc;
+    --border:#e8eaf1;
+    --success:#20b573;
+    --danger:#ef476f;
+    --warning:#f5a623;
+    --shadow:0 15px 45px rgba(31,35,61,.10);
+}
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+.loader{
+    position:fixed;
+    inset:0;
+    background:#fff;
+    z-index:9999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transition:.6s ease;
+}
+
+.loader.hide{
+    opacity:0;
+    visibility:hidden;
+}
+
+.loader-box{
+    text-align:center;
+}
+
+.loader-logo{
+    width:65px;
+    height:65px;
+    border-radius:20px;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:800;
+    margin:auto;
+    animation:pulse 1.2s infinite;
+}
+
+.loader-box p{
+    margin-top:15px;
+    font-weight:600;
+}
+
+@keyframes pulse{
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.1);
+    }
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:1000;
+    padding:18px 6%;
+    transition:.4s ease;
+}
+
+.navbar.scrolled{
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(20px);
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+.nav-container{
+    max-width:1250px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:23px;
+    font-weight:800;
+}
+
+.logo-icon{
+    width:43px;
+    height:43px;
+    border-radius:13px;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 20px rgba(108,77,246,.3);
+}
+
+.logo span{
+    color:var(--primary);
+}
+
+.nav-links{
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:28px;
+}
+
+.nav-links a{
+    color:#41495c;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.nav-links a:hover{
+    color:var(--primary);
+}
+
+.nav-book{
+    background:var(--primary);
+    color:white !important;
+    padding:11px 18px;
+    border-radius:12px;
+}
+
+.menu-btn{
+    display:none;
+    border:none;
+    background:none;
+    font-size:26px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    min-height:720px;
+    padding:150px 6% 100px;
+    background:
+        radial-gradient(circle at 10% 20%,rgba(108,77,246,.12),transparent 30%),
+        radial-gradient(circle at 90% 30%,rgba(255,101,132,.12),transparent 30%),
+        #fafaff;
+}
+
+.hero-container{
+    max-width:1250px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+}
+
+.hero-content{
+    animation:slideLeft .8s ease;
+}
+
+.hero-tag{
+    display:inline-flex;
+    background:#eeeaff;
+    color:var(--primary);
+    padding:9px 15px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:22px;
+}
+
+.hero h1{
+    font-family:"Playfair Display",serif;
+    font-size:clamp(45px,5vw,72px);
+    line-height:1.05;
+    margin-bottom:25px;
+}
+
+.hero h1 span{
+    color:var(--primary);
+}
+
+.hero-description{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.8;
+    max-width:570px;
+    margin-bottom:30px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.primary-btn{
+    border:none;
+    padding:14px 23px;
+    border-radius:13px;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:white;
+    font-weight:700;
+    box-shadow:0 12px 25px rgba(108,77,246,.25);
+    transition:.35s;
+}
+
+.primary-btn:hover{
+    transform:translateY(-4px);
+    box-shadow:0 18px 30px rgba(108,77,246,.35);
+}
+
+.secondary-btn{
+    padding:13px 23px;
+    border-radius:13px;
+    border:1px solid var(--border);
+    background:white;
+    font-weight:700;
+    transition:.35s;
+}
+
+.secondary-btn:hover{
+    transform:translateY(-4px);
+    border-color:var(--primary);
+    color:var(--primary);
+}
+
+.hero-image{
+    position:relative;
+    animation:slideRight .8s ease;
+}
+
+.hero-image img{
+    width:100%;
+    height:450px;
+    object-fit:cover;
+    border-radius:35px;
+    box-shadow:var(--shadow);
+}
+
+.floating-card{
+    position:absolute;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(15px);
+    padding:15px;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    animation:float 3s ease-in-out infinite;
+}
+
+.floating-card.one{
+    left:-30px;
+    top:40px;
+}
+
+.floating-card.two{
+    right:-25px;
+    bottom:35px;
+}
+
+.float-icon{
+    width:42px;
+    height:42px;
+    background:#eeeaff;
+    border-radius:12px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.floating-card small{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.floating-card strong{
+    font-size:14px;
+}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+@keyframes slideLeft{
+    from{
+        opacity:0;
+        transform:translateX(-40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+@keyframes slideRight{
+    from{
+        opacity:0;
+        transform:translateX(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-section{
+    margin-top:-55px;
+    position:relative;
+    z-index:10;
+    padding:0 6%;
+}
+
+.search-box{
+    max-width:1100px;
+    margin:auto;
+    background:white;
+    padding:18px;
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    display:grid;
+    grid-template-columns:1.5fr 1fr 1fr auto;
+    gap:12px;
+}
+
+.search-field{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:0 13px;
+}
+
+.search-field input,
+.search-field select{
+    border:none;
+    outline:none;
+    width:100%;
+    padding:13px 5px;
+    background:transparent;
+}
+
+.search-button{
+    border:none;
+    border-radius:13px;
+    padding:0 23px;
+    background:var(--primary);
+    color:white;
+    font-weight:700;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+section{
+    padding:90px 6%;
+}
+
+.section-container{
+    max-width:1250px;
+    margin:auto;
+}
+
+.section-heading{
+    text-align:center;
+    margin-bottom:45px;
+}
+
+.section-heading span{
+    color:var(--primary);
+    font-size:14px;
+    font-weight:700;
+}
+
+.section-heading h2{
+    font-family:"Playfair Display",serif;
+    font-size:42px;
+    margin:10px 0;
+}
+
+.section-heading p{
+    color:var(--muted);
+}
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.feature-card{
+    background:white;
+    padding:30px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    transition:.4s;
+}
+
+.feature-card:hover{
+    transform:translateY(-10px);
+    box-shadow:var(--shadow);
+}
+
+.feature-icon{
+    width:55px;
+    height:55px;
+    background:#f0edff;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    margin-bottom:20px;
+}
+
+.feature-card h3{
+    margin-bottom:10px;
+}
+
+.feature-card p{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   HALL SECTION
+========================================================= */
+
+.halls-section{
+    background:#f4f5fa;
+}
+
+.filter-row{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:35px;
+}
+
+.filter-btn{
+    border:1px solid var(--border);
+    background:white;
+    padding:10px 18px;
+    border-radius:30px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.filter-btn:hover,
+.filter-btn.active{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+}
+
+.hall-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.hall-card{
+    background:white;
+    border-radius:22px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    transition:.45s;
+}
+
+.hall-card:hover{
+    transform:translateY(-12px);
+    box-shadow:0 25px 50px rgba(31,35,61,.15);
+}
+
+.hall-image{
+    height:220px;
+    position:relative;
+    overflow:hidden;
+}
+
+.hall-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.6s;
+}
+
+.hall-card:hover .hall-image img{
+    transform:scale(1.08);
+}
+
+.badge{
+    position:absolute;
+    top:15px;
+    left:15px;
+    background:var(--success);
+    color:white;
+    padding:7px 12px;
+    border-radius:30px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.favorite{
+    position:absolute;
+    top:15px;
+    right:15px;
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.92);
+    font-size:19px;
+    transition:.3s;
+}
+
+.favorite:hover,
+.favorite.liked{
+    background:var(--danger);
+    color:white;
+    transform:scale(1.1);
+}
+
+.hall-content{
+    padding:22px;
+}
+
+.hall-title-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.hall-title{
+    font-weight:800;
+    font-size:18px;
+}
+
+.rating{
+    color:#f5a623;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+.location{
+    color:var(--muted);
+    font-size:13px;
+    margin:8px 0 15px;
+}
+
+.hall-features{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-bottom:20px;
+}
+
+.mini-feature{
+    background:#f5f5fa;
+    color:#555d70;
+    padding:7px 9px;
+    border-radius:8px;
+    font-size:11px;
+}
+
+.price-row{
+    border-top:1px solid var(--border);
+    padding-top:17px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.price strong{
+    font-size:19px;
+}
+
+.price small{
+    color:var(--muted);
+}
+
+.card-buttons{
+    display:flex;
+    gap:7px;
+}
+
+.details-btn,
+.book-btn{
+    border:none;
+    padding:10px 12px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.details-btn{
+    background:#eeeaff;
+    color:var(--primary);
+}
+
+.book-btn{
+    background:var(--primary);
+    color:white;
+}
+
+/* =========================================================
+   SLOT BOOKING SECTION
+========================================================= */
+
+.booking-section{
+    background:#fff;
+}
+
+.booking-layout{
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    gap:25px;
+    align-items:start;
+}
+
+.booking-panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:25px;
+    box-shadow:0 10px 35px rgba(30,35,60,.06);
+}
+
+.booking-panel h3{
+    margin-bottom:18px;
+}
+
+.booking-label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.booking-select,
+.booking-date{
+    width:100%;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    outline:none;
+    margin-bottom:20px;
+}
+
+.booking-select:focus,
+.booking-date:focus{
+    border-color:var(--primary);
+}
+
+.selected-hall-preview{
+    background:#f7f6ff;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:20px;
+}
+
+.selected-hall-preview img{
+    width:100%;
+    height:160px;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:12px;
+}
+
+.selected-hall-preview h4{
+    margin-bottom:5px;
+}
+
+.selected-hall-preview p{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.slot-date-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.slot-date-heading small{
+    color:var(--muted);
+}
+
+.slot-list{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.slot{
+    position:relative;
+    border:2px solid var(--border);
+    background:white;
+    border-radius:17px;
+    padding:20px 12px;
+    text-align:center;
+    transition:.35s;
+    overflow:hidden;
+}
+
+.slot:hover:not(.booked){
+    transform:translateY(-5px);
+    border-color:var(--primary);
+    box-shadow:0 12px 25px rgba(108,77,246,.12);
+}
+
+.slot.selected{
+    border-color:var(--primary);
+    background:#f0edff;
+    box-shadow:0 10px 25px rgba(108,77,246,.18);
+}
+
+.slot.booked{
+    background:#fff0f3;
+    border-color:#ffd2dc;
+    cursor:not-allowed;
+    opacity:.75;
+}
+
+.slot-icon{
+    font-size:27px;
+    margin-bottom:8px;
+}
+
+.slot strong{
+    display:block;
+    font-size:14px;
+}
+
+.slot span{
+    display:block;
+    font-size:11px;
+    color:var(--muted);
+    margin-top:5px;
+}
+
+.slot-status{
+    margin-top:10px;
+    font-size:11px;
+    font-weight:800;
+}
+
+.available-text{
+    color:var(--success);
+}
+
+.booked-text{
+    color:var(--danger);
+}
+
+.selected-text{
+    color:var(--primary);
+}
+
+.slot-check{
+    position:absolute;
+    top:8px;
+    right:8px;
+    display:none;
+    color:var(--primary);
+    font-weight:900;
+}
+
+.slot.selected .slot-check{
+    display:block;
+}
+
+.booking-summary{
+    margin-top:25px;
+    border-top:1px solid var(--border);
+    padding-top:20px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    font-size:14px;
+}
+
+.summary-row span:first-child{
+    color:var(--muted);
+}
+
+.summary-total{
+    font-size:18px;
+    font-weight:800;
+    color:var(--primary);
+    border-top:1px solid var(--border);
+    margin-top:8px;
+    padding-top:12px;
+}
+
+.confirm-slot-btn{
+    width:100%;
+    border:none;
+    padding:15px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:white;
+    font-weight:700;
+    margin-top:15px;
+    transition:.3s;
+}
+
+.confirm-slot-btn:hover{
+    transform:translateY(-3px);
+}
+
+/* =========================================================
+   MY BOOKINGS
+========================================================= */
+
+.my-bookings{
+    background:#f4f5fa;
+}
+
+.booking-list{
+    display:grid;
+    gap:16px;
+}
+
+.booking-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:20px;
+    display:grid;
+    grid-template-columns:80px 1fr auto;
+    align-items:center;
+    gap:18px;
+    transition:.3s;
+}
+
+.booking-card:hover{
+    transform:translateX(5px);
+    box-shadow:var(--shadow);
+}
+
+.booking-thumb{
+    width:80px;
+    height:80px;
+    border-radius:13px;
+    object-fit:cover;
+}
+
+.booking-info h4{
+    margin-bottom:6px;
+}
+
+.booking-info p{
+    color:var(--muted);
+    font-size:13px;
+    margin:4px 0;
+}
+
+.booking-status{
+    padding:8px 12px;
+    border-radius:20px;
+    background:#e9fff5;
+    color:var(--success);
+    font-size:11px;
+    font-weight:800;
+    display:inline-block;
+    margin-bottom:10px;
+}
+
+.cancel-btn{
+    border:1px solid #ffd2dc;
+    background:#fff0f3;
+    color:var(--danger);
+    padding:9px 13px;
+    border-radius:9px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.empty-bookings{
+    text-align:center;
+    padding:50px;
+    background:white;
+    border-radius:20px;
+    border:1px solid var(--border);
+}
+
+.empty-bookings .empty-icon{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.empty-bookings p{
+    color:var(--muted);
+    margin:10px 0 20px;
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:70px;
+    align-items:center;
+}
+
+.about-image img{
+    width:100%;
+    height:450px;
+    object-fit:cover;
+    border-radius:30px;
+    box-shadow:var(--shadow);
+}
+
+.about-content h2{
+    font-family:"Playfair Display",serif;
+    font-size:45px;
+    margin:12px 0 20px;
+}
+
+.about-content p{
+    color:var(--muted);
+    line-height:1.8;
+    margin-bottom:18px;
+}
+
+.check-list{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin:25px 0;
+}
+
+.check{
+    font-size:14px;
+    font-weight:600;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(10,15,30,.72);
+    backdrop-filter:blur(8px);
+    z-index:3000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    opacity:0;
+    visibility:hidden;
+    transition:.35s;
+}
+
+.modal.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal-box{
+    width:min(900px,100%);
+    max-height:90vh;
+    overflow-y:auto;
+    background:white;
+    border-radius:28px;
+    position:relative;
+    transform:scale(.9) translateY(30px);
+    transition:.4s;
+}
+
+.modal.active .modal-box{
+    transform:scale(1) translateY(0);
+}
+
+.close-modal{
+    position:absolute;
+    right:18px;
+    top:18px;
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+    font-size:20px;
+    z-index:5;
+}
+
+.modal-image{
+    height:330px;
+}
+
+.modal-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.modal-content{
+    padding:30px;
+}
+
+.modal-title-row{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.modal-content h2{
+    font-family:"Playfair Display",serif;
+    font-size:32px;
+}
+
+.modal-content p{
+    color:var(--muted);
+    line-height:1.7;
+    margin:15px 0;
+}
+
+.facility-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:25px 0;
+}
+
+.facility{
+    border:1px solid var(--border);
+    padding:14px;
+    border-radius:12px;
+    background:#fafaff;
+    font-size:13px;
+    font-weight:600;
+}
+
+.modal-price{
+    font-size:25px;
+    color:var(--primary);
+    font-weight:800;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.booking-form{
+    display:grid;
+    gap:15px;
+    margin-top:20px;
+}
+
+.form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:var(--primary);
+}
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+.confirm-box{
+    text-align:center;
+    padding:50px 35px;
+}
+
+.success-icon{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:#e6fff3;
+    color:var(--success);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
+    margin:0 auto 20px;
+    animation:successPop .6s ease;
+}
+
+@keyframes successPop{
+    0%{
+        transform:scale(0);
+    }
+
+    70%{
+        transform:scale(1.15);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast-container{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    z-index:5000;
+    display:grid;
+    gap:10px;
+}
+
+.toast{
+    background:#182033;
+    color:white;
+    padding:15px 18px;
+    border-radius:13px;
+    box-shadow:var(--shadow);
+    min-width:270px;
+    animation:toastIn .4s ease;
+    font-size:13px;
+}
+
+.toast.success{
+    border-left:4px solid var(--success);
+}
+
+.toast.error{
+    border-left:4px solid var(--danger);
+}
+
+@keyframes toastIn{
+    from{
+        opacity:0;
+        transform:translateX(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    background:#151a2b;
+    color:white;
+    padding:70px 6% 30px;
+}
+
+.footer-container{
+    max-width:1250px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:40px;
+}
+
+.footer-brand p{
+    color:#a8adbd;
+    line-height:1.7;
+    margin-top:15px;
+    max-width:350px;
+}
+
+.footer-col h4{
+    margin-bottom:20px;
+}
+
+.footer-col a{
+    display:block;
+    color:#a8adbd;
+    margin-bottom:12px;
+    font-size:14px;
+    transition:.3s;
+}
+
+.footer-col a:hover{
+    color:white;
+    transform:translateX(5px);
+}
+
+.copyright{
+    border-top:1px solid #303548;
+    margin-top:50px;
+    padding-top:25px;
+    text-align:center;
+    color:#8f95a8;
+    font-size:13px;
+}
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+.reveal{
+    opacity:0;
+    transform:translateY(35px);
+    transition:.8s ease;
+}
+
+.reveal.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1050px){
+
+    .nav-links{
+        position:absolute;
+        right:6%;
+        top:80px;
+        width:250px;
+        background:white;
+        padding:25px;
+        border-radius:18px;
+        box-shadow:var(--shadow);
+        flex-direction:column;
+        align-items:flex-start;
+        opacity:0;
+        visibility:hidden;
+        transform:translateY(-15px);
+        transition:.3s;
+    }
+
+    .nav-links.active{
+        opacity:1;
+        visibility:visible;
+        transform:translateY(0);
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .hero-container,
+    .about-grid,
+    .booking-layout{
+        grid-template-columns:1fr;
+    }
+
+    .features{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hall-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .search-box{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .search-button{
+        padding:14px;
+    }
+
+    .footer-container{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media(max-width:650px){
+
+    section{
+        padding:65px 5%;
+    }
+
+    .hero{
+        padding:130px 5% 80px;
+    }
+
+    .hero h1{
+        font-size:43px;
+    }
+
+    .hero-image img{
+        height:330px;
+    }
+
+    .floating-card.one{
+        left:5px;
+    }
+
+    .floating-card.two{
+        right:5px;
+    }
+
+    .search-section{
+        padding:0 5%;
+    }
+
+    .search-box{
+        grid-template-columns:1fr;
+    }
+
+    .features,
+    .hall-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section-heading h2{
+        font-size:34px;
+    }
+
+    .check-list{
+        grid-template-columns:1fr;
+    }
+
+    .facility-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .slot-list{
+        grid-template-columns:1fr;
+    }
+
+    .booking-card{
+        grid-template-columns:60px 1fr;
+    }
+
+    .booking-thumb{
+        width:60px;
+        height:60px;
+    }
+
+    .booking-card > div:last-child{
+        grid-column:1/-1;
+    }
+
+    .footer-container{
+        grid-template-columns:1fr;
+    }
+
+    .modal-image{
+        height:230px;
+    }
+
+    .modal-title-row{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     LOADER
+===================================================== -->
+
+<div class="loader" id="loader">
+
+    <div class="loader-box">
+
+        <div class="loader-logo">
+            H
+        </div>
+
+        <p>
+            Preparing your perfect venue...
+        </p>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar" id="navbar">
+
+    <div class="nav-container">
+
+        <a href="#home" class="logo">
+
+            <div class="logo-icon">
+                H
+            </div>
+
+            Hall<span>ify</span>
+
+        </a>
+
+        <button class="menu-btn" id="menuBtn">
+            ☰
+        </button>
+
+        <ul class="nav-links" id="navLinks">
+
+            <li>
+                <a href="#home">Home</a>
+            </li>
+
+            <li>
+                <a href="#halls">Function Halls</a>
+            </li>
+
+            <li>
+                <a href="#booking">Slot Booking</a>
+            </li>
+
+            <li>
+                <a href="#myBookings">My Bookings</a>
+            </li>
+
+            <li>
+                <a href="#features">Facilities</a>
+            </li>
+
+            <li>
+                <a href="#halls" class="nav-book">
+                    Book Now
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</header>
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero" id="home">
+
+    <div class="hero-container">
+
+        <div class="hero-content">
+
+            <div class="hero-tag">
+                ✨ Smart Function Hall Slot Booking
+            </div>
+
+            <h1>
+                Your Event.<br>
+                Your <span>Perfect Hall.</span>
+            </h1>
+
+            <p class="hero-description">
+                Discover beautiful function halls, compare facilities,
+                check available slots and reserve the perfect venue
+                for your special occasion.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#halls" class="primary-btn">
+                    Explore Halls →
+                </a>
+
+                <a href="#booking" class="secondary-btn">
+                    Check Slots
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="hero-image">
+
+            <img
+                src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1000&q=80"
+                alt="Function Hall"
+            >
+
+            <div class="floating-card one">
+
+                <div class="float-icon">
+                    ⭐
+                </div>
+
+                <div>
+                    <small>Average Rating</small>
+                    <strong>4.8 / 5</strong>
+                </div>
+
+            </div>
+
+            <div class="floating-card two">
+
+                <div class="float-icon">
+                    📅
+                </div>
+
+                <div>
+                    <small>Available Slots</small>
+                    <strong>Today</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<div class="search-section">
+
+    <div class="search-box">
+
+        <div class="search-field">
+
+            <span>🔍</span>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search function hall..."
+            >
+
+        </div>
+
+        <div class="search-field">
+
+            <span>📍</span>
+
+            <select id="locationFilter">
+
+                <option value="all">
+                    All Locations
+                </option>
+
+                <option value="Vijayawada">
+                    Vijayawada
+                </option>
+
+                <option value="Hyderabad">
+                    Hyderabad
+                </option>
+
+                <option value="Guntur">
+                    Guntur
+                </option>
+
+                <option value="Tirupati">
+                    Tirupati
+                </option>
+
+                <option value="Visakhapatnam">
+                    Visakhapatnam
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="search-field">
+
+            <span>👥</span>
+
+            <select id="capacityFilter">
+
+                <option value="all">
+                    Any Capacity
+                </option>
+
+                <option value="300">
+                    300+ Guests
+                </option>
+
+                <option value="500">
+                    500+ Guests
+                </option>
+
+                <option value="800">
+                    800+ Guests
+                </option>
+
+                <option value="1000">
+                    1000+ Guests
+                </option>
+
+            </select>
+
+        </div>
+
+        <button class="search-button" id="searchButton">
+            Search
+        </button>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section id="features">
+
+    <div class="section-container">
+
+        <div class="section-heading reveal">
+
+            <span>WHY HALLIFY</span>
+
+            <h2>
+                Everything For Your Celebration
+            </h2>
+
+            <p>
+                Compare venues and check facilities before booking.
+            </p>
+
+        </div>
+
+        <div class="features">
+
+            <div class="feature-card reveal">
+
+                <div class="feature-icon">
+                    🏛️
+                </div>
+
+                <h3>
+                    Premium Venues
+                </h3>
+
+                <p>
+                    Choose from multiple function halls
+                    for different types of events.
+                </p>
+
+            </div>
+
+            <div class="feature-card reveal">
+
+                <div class="feature-icon">
+                    📅
+                </div>
+
+                <h3>
+                    Slot Booking
+                </h3>
+
+                <p>
+                    Check dates and choose morning,
+                    afternoon or evening slots.
+                </p>
+
+            </div>
+
+            <div class="feature-card reveal">
+
+                <div class="feature-icon">
+                    💰
+                </div>
+
+                <h3>
+                    Transparent Pricing
+                </h3>
+
+                <p>
+                    View the hall price and booking
+                    information clearly.
+                </p>
+
+            </div>
+
+            <div class="feature-card reveal">
+
+                <div class="feature-icon">
+                    ✨
+                </div>
+
+                <h3>
+                    Complete Facilities
+                </h3>
+
+                <p>
+                    Check AC, parking, catering,
+                    rooms, stage, sound and more.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     FUNCTION HALLS
+===================================================== -->
+
+<section class="halls-section" id="halls">
+
+    <div class="section-container">
+
+        <div class="section-heading reveal">
+
+            <span>OUR VENUES</span>
+
+            <h2>
+                Explore Function Halls
+            </h2>
+
+            <p>
+                Choose the venue that matches your event.
+            </p>
+
+        </div>
+
+        <div class="filter-row">
+
+            <button
+                class="filter-btn active"
+                data-category="all"
+            >
+                All
+            </button>
+
+            <button
+                class="filter-btn"
+                data-category="wedding"
+            >
+                💍 Wedding
+            </button>
+
+            <button
+                class="filter-btn"
+                data-category="birthday"
+            >
+                🎂 Birthday
+            </button>
+
+            <button
+                class="filter-btn"
+                data-category="corporate"
+            >
+                💼 Corporate
+            </button>
+
+            <button
+                class="filter-btn"
+                data-category="party"
+            >
+                🎉 Party
+            </button>
+
+        </div>
+
+        <div
+            class="hall-grid"
+            id="hallGrid"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     SLOT BOOKING
+===================================================== -->
+
+<section class="booking-section" id="booking">
+
+    <div class="section-container">
+
+        <div class="section-heading reveal">
+
+            <span>BOOK YOUR SLOT</span>
+
+            <h2>
+                Select Date & Time
+            </h2>
+
+            <p>
+                Choose a hall, date and available time slot.
+            </p>
+
+        </div>
+
+        <div class="booking-layout">
+
+            <!-- LEFT PANEL -->
+
+            <div class="booking-panel reveal">
+
+                <h3>
+                    📋 Booking Details
+                </h3>
+
+                <label class="booking-label">
+                    Select Function Hall
+                </label>
+
+                <select
+                    class="booking-select"
+                    id="bookingHallSelect"
+                ></select>
+
+                <div
+                    class="selected-hall-preview"
+                    id="selectedHallPreview"
+                ></div>
+
+                <label class="booking-label">
+                    Select Event Date
+                </label>
+
+                <input
+                    type="date"
+                    class="booking-date"
+                    id="slotDate"
+                >
+
+                <div class="booking-summary">
+
+                    <h3>
+                        Booking Summary
+                    </h3>
+
+                    <div class="summary-row">
+
+                        <span>
+                            Hall
+                        </span>
+
+                        <strong id="summaryHall">
+                            -
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            Date
+                        </span>
+
+                        <strong id="summaryDate">
+                            -
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            Slot
+                        </span>
+
+                        <strong id="summarySlot">
+                            -
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-row summary-total">
+
+                        <span>
+                            Hall Price
+                        </span>
+
+                        <strong id="summaryPrice">
+                            -
+                        </strong>
+
+                    </div>
+
+                    <button
+                        class="confirm-slot-btn"
+                        id="continueBookingBtn"
+                    >
+                        Continue Booking →
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT PANEL -->
+
+            <div class="booking-panel reveal">
+
+                <div class="slot-date-heading">
+
+                    <div>
+                        <h3>
+                            🕐 Available Slots
+                        </h3>
+
+                        <small id="slotSelectedDate">
+                            Select a date
+                        </small>
+                    </div>
+
+                    <div>
+                        🟢 Available &nbsp;
+                        🔴 Booked
+                    </div>
+
+                </div>
+
+                <div
+                    class="slot-list"
+                    id="slotList"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     MY BOOKINGS
+===================================================== -->
+
+<section class="my-bookings" id="myBookings">
+
+    <div class="section-container">
+
+        <div class="section-heading reveal">
+
+            <span>YOUR RESERVATIONS</span>
+
+            <h2>
+                My Bookings
+            </h2>
+
+            <p>
+                View and manage your function hall bookings.
+            </p>
+
+        </div>
+
+        <div
+            class="booking-list"
+            id="bookingList"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section id="about">
+
+    <div class="section-container">
+
+        <div class="about-grid">
+
+            <div class="about-image reveal">
+
+                <img
+                    src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1000&q=80"
+                    alt="Event"
+                >
+
+            </div>
+
+            <div class="about-content reveal">
+
+                <span style="color:var(--primary);font-weight:700;">
+                    ABOUT HALLIFY
+                </span>
+
+                <h2>
+                    Make Your Celebration Truly Special
+                </h2>
+
+                <p>
+                    Hallify is a frontend function hall discovery
+                    and slot booking platform designed to make venue
+                    selection easier.
+                </p>
+
+                <p>
+                    Customers can explore halls, compare facilities,
+                    check available dates and select their preferred
+                    time slot.
+                </p>
+
+                <div class="check-list">
+
+                    <div class="check">
+                        ✓ Multiple Venues
+                    </div>
+
+                    <div class="check">
+                        ✓ Slot Availability
+                    </div>
+
+                    <div class="check">
+                        ✓ Facility Details
+                    </div>
+
+                    <div class="check">
+                        ✓ Easy Booking
+                    </div>
+
+                    <div class="check">
+                        ✓ Booking History
+                    </div>
+
+                    <div class="check">
+                        ✓ Responsive Design
+                    </div>
+
+                </div>
+
+                <a
+                    href="#halls"
+                    class="primary-btn"
+                >
+                    Find Your Hall
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-container">
+
+        <div class="footer-brand">
+
+            <a href="#home" class="logo">
+
+                <div class="logo-icon">
+                    H
+                </div>
+
+                Hall<span>ify</span>
+
+            </a>
+
+            <p>
+                Discover, compare and book beautiful function halls
+                for memorable celebrations.
+            </p>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h4>
+                Explore
+            </h4>
+
+            <a href="#home">
+                Home
+            </a>
+
+            <a href="#halls">
+                Function Halls
+            </a>
+
+            <a href="#booking">
+                Slot Booking
+            </a>
+
+            <a href="#myBookings">
+                My Bookings
+            </a>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h4>
+                Events
+            </h4>
+
+            <a href="#halls">
+                Weddings
+            </a>
+
+            <a href="#halls">
+                Birthdays
+            </a>
+
+            <a href="#halls">
+                Corporate
+            </a>
+
+            <a href="#halls">
+                Parties
+            </a>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h4>
+                Contact
+            </h4>
+
+            <a href="#">
+                📞 +91 98765 43210
+            </a>
+
+            <a href="#">
+                ✉️ hello@hallify.com
+            </a>
+
+            <a href="#">
+                📍 Andhra Pradesh, India
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="copyright">
+
+        © 2026 Hallify.
+        Function Hall Slot Booking Platform.
+        Built for Hackathon.
+
+    </div>
+
+</footer>
+
+<!-- =====================================================
+     HALL DETAILS MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="detailsModal"
+>
+
+    <div class="modal-box">
+
+        <button
+            class="close-modal"
+            onclick="closeModal('detailsModal')"
+        >
+            ×
+        </button>
+
+        <div class="modal-image">
+
+            <img
+                id="modalImage"
+                src=""
+                alt=""
+            >
+
+        </div>
+
+        <div class="modal-content">
+
+            <div class="modal-title-row">
+
+                <div>
+
+                    <h2 id="modalTitle">
+                    </h2>
+
+                    <div id="modalLocation">
+                    </div>
+
+                </div>
+
+                <div
+                    class="rating"
+                    id="modalRating"
+                ></div>
+
+            </div>
+
+            <p id="modalDescription">
+            </p>
+
+            <h3>
+                Facilities & Amenities
+            </h3>
+
+            <div
+                class="facility-grid"
+                id="facilityGrid"
+            ></div>
+
+            <div class="price-row">
+
+                <div
+                    class="modal-price"
+                    id="modalPrice"
+                ></div>
+
+                <button
+                    class="primary-btn"
+                    id="modalBookButton"
+                >
+                    Book This Hall
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     CUSTOMER BOOKING MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="customerBookingModal"
+>
+
+    <div class="modal-box">
+
+        <button
+            class="close-modal"
+            onclick="closeModal('customerBookingModal')"
+        >
+            ×
+        </button>
+
+        <div class="modal-content">
+
+            <h2>
+                Complete Your Booking
+            </h2>
+
+            <p id="customerBookingDetails">
+            </p>
+
+            <div class="booking-form">
+
+                <div class="form-group">
+
+                    <label>
+                        Your Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customerName"
+                        placeholder="Enter your full name"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Phone Number *
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="customerPhone"
+                        placeholder="Enter phone number"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Event Type
+                    </label>
+
+                    <select id="eventType">
+
+                        <option>
+                            Wedding
+                        </option>
+
+                        <option>
+                            Birthday
+                        </option>
+
+                        <option>
+                            Reception
+                        </option>
+
+                        <option>
+                            Corporate Event
+                        </option>
+
+                        <option>
+                            Party
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Number of Guests *
+                    </label>
+
+                    <input
+                        type="number"
+                        id="guestCount"
+                        min="1"
+                        placeholder="Example: 500"
+                    >
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="confirmBooking()"
+                >
+                    Confirm Booking ✓
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     SUCCESS MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="successModal"
+>
+
+    <div class="modal-box">
+
+        <div class="confirm-box">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2>
+                Booking Confirmed!
+            </h2>
+
+            <p
+                style="
+                color:var(--muted);
+                margin:15px 0 25px;
+                "
+            >
+                Your function hall slot has been successfully
+                reserved.
+            </p>
+
+            <button
+                class="primary-btn"
+                onclick="closeModal('successModal'); scrollToBookings();"
+            >
+                View My Bookings
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+<script>
+
+/* =========================================================
+   FUNCTION HALL DATA
+========================================================= */
+
+const halls = [
+
+{
+    id:1,
+    name:"Royal Grand Function Hall",
+    location:"Vijayawada",
+    category:"wedding",
+    price:"₹45,000",
+    capacity:800,
+    rating:4.8,
+    image:"https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1000&q=80",
+    description:"A luxurious and spacious function hall designed for weddings, receptions and grand celebrations.",
+    facilities:[
+        "❄️ Fully Air Conditioned",
+        "🚗 Parking - 200 Cars",
+        "🎤 Premium Stage",
+        "🔊 Sound System",
+        "💡 LED Lighting",
+        "🍽️ Catering Area",
+        "🛏️ 5 Guest Rooms",
+        "📶 High-Speed Wi-Fi",
+        "⚡ Generator Backup"
+    ]
+},
+
+{
+    id:2,
+    name:"Crystal Palace Banquet",
+    location:"Hyderabad",
+    category:"wedding",
+    price:"₹65,000",
+    capacity:1200,
+    rating:4.9,
+    image:"https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=1000&q=80",
+    description:"A premium banquet venue with elegant interiors and excellent facilities for large celebrations.",
+    facilities:[
+        "❄️ Central AC",
+        "🚗 300 Car Parking",
+        "🎤 Grand Stage",
+        "🔊 DJ Sound System",
+        "💡 Designer Lighting",
+        "🍽️ Separate Dining",
+        "🛏️ 10 Rooms",
+        "📶 Wi-Fi",
+        "⚡ Power Backup"
+    ]
+},
+
+{
+    id:3,
+    name:"Green Garden Convention",
+    location:"Guntur",
+    category:"party",
+    price:"₹30,000",
+    capacity:600,
+    rating:4.6,
+    image:"https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1000&q=80",
+    description:"A beautiful garden-style venue perfect for outdoor parties, birthdays and receptions.",
+    facilities:[
+        "🌳 Garden Area",
+        "❄️ AC Hall",
+        "🚗 Parking",
+        "🎤 Stage",
+        "🔊 Sound System",
+        "💡 Decorative Lights",
+        "🍽️ Catering",
+        "📸 Photo Area",
+        "⚡ Backup Power"
+    ]
+},
+
+{
+    id:4,
+    name:"Pearl Celebration Hall",
+    location:"Tirupati",
+    category:"birthday",
+    price:"₹25,000",
+    capacity:400,
+    rating:4.5,
+    image:"https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1000&q=80",
+    description:"A stylish venue for birthdays, small receptions and private celebrations.",
+    facilities:[
+        "❄️ Air Conditioning",
+        "🚗 Parking",
+        "🎂 Cake Area",
+        "🎤 Small Stage",
+        "🔊 Sound System",
+        "💡 Party Lighting",
+        "🍽️ Dining Area",
+        "📸 Photo Booth",
+        "📶 Wi-Fi"
+    ]
+},
+
+{
+    id:5,
+    name:"Grand Lotus Convention",
+    location:"Visakhapatnam",
+    category:"corporate",
+    price:"₹50,000",
+    capacity:1000,
+    rating:4.7,
+    image:"https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1000&q=80",
+    description:"A modern convention center suitable for corporate meetings, conferences and large events.",
+    facilities:[
+        "❄️ Central AC",
+        "🚗 Large Parking",
+        "📽️ Projector",
+        "🎤 Conference Stage",
+        "🔊 Professional Audio",
+        "💡 Conference Lighting",
+        "🍽️ Catering",
+        "📶 High-Speed Wi-Fi",
+        "⚡ Power Backup"
+    ]
+},
+
+{
+    id:6,
+    name:"Silver Crown Palace",
+    location:"Vijayawada",
+    category:"wedding",
+    price:"₹55,000",
+    capacity:1000,
+    rating:4.8,
+    image:"https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=80",
+    description:"A grand palace-style venue for weddings and traditional celebrations.",
+    facilities:[
+        "❄️ Full AC",
+        "🚗 250 Car Parking",
+        "🎤 Large Stage",
+        "🔊 Sound System",
+        "💡 Premium Lighting",
+        "🍽️ Dining Hall",
+        "🛏️ Guest Rooms",
+        "📶 Wi-Fi",
+        "⚡ Generator"
+    ]
+},
+
+{
+    id:7,
+    name:"Sunrise Party Arena",
+    location:"Hyderabad",
+    category:"party",
+    price:"₹22,000",
+    capacity:350,
+    rating:4.4,
+    image:"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1000&q=80",
+    description:"A modern party venue with colorful lighting and entertainment facilities.",
+    facilities:[
+        "❄️ AC",
+        "🚗 Parking",
+        "🎧 DJ Setup",
+        "🎤 Stage",
+        "🌈 RGB Lighting",
+        "🍕 Food Area",
+        "📸 Photo Booth",
+        "📶 Wi-Fi",
+        "🎮 Entertainment Zone"
+    ]
+},
+
+{
+    id:8,
+    name:"Royal Orchid Banquet",
+    location:"Guntur",
+    category:"wedding",
+    price:"₹38,000",
+    capacity:700,
+    rating:4.7,
+    image:"https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&w=1000&q=80",
+    description:"An elegant banquet hall offering comfortable facilities for weddings and receptions.",
+    facilities:[
+        "❄️ AC",
+        "🚗 Parking",
+        "🎤 Stage",
+        "🔊 Audio System",
+        "💡 Lighting",
+        "🍽️ Dining",
+        "🛏️ 4 Rooms",
+        "📶 Wi-Fi",
+        "⚡ Backup"
+    ]
+},
+
+{
+    id:9,
+    name:"Emerald Garden Hall",
+    location:"Tirupati",
+    category:"party",
+    price:"₹28,000",
+    capacity:500,
+    rating:4.6,
+    image:"https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1000&q=80",
+    description:"A beautiful garden venue perfect for parties and outdoor celebrations.",
+    facilities:[
+        "🌳 Garden",
+        "❄️ AC Hall",
+        "🚗 Parking",
+        "🎤 Stage",
+        "🔊 Sound",
+        "💡 Lights",
+        "🍽️ Catering",
+        "📸 Photo Area",
+        "⚡ Generator"
+    ]
+},
+
+{
+    id:10,
+    name:"Imperial Conference Center",
+    location:"Visakhapatnam",
+    category:"corporate",
+    price:"₹48,000",
+    capacity:900,
+    rating:4.7,
+    image:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1000&q=80",
+    description:"A professional event space designed for meetings, conferences and corporate functions.",
+    facilities:[
+        "❄️ Central AC",
+        "🚗 Parking",
+        "📽️ Projector",
+        "🎤 Stage",
+        "🔊 Audio",
+        "💡 Professional Lighting",
+        "🍽️ Catering",
+        "📶 Wi-Fi",
+        "⚡ Power Backup"
+    ]
+},
+
+{
+    id:11,
+    name:"Dreamland Birthday Studio",
+    location:"Vijayawada",
+    category:"birthday",
+    price:"₹18,000",
+    capacity:300,
+    rating:4.5,
+    image:"https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1000&q=80",
+    description:"A colorful and creative party venue designed especially for birthdays and small celebrations.",
+    facilities:[
+        "❄️ AC",
+        "🚗 Parking",
+        "🎂 Cake Zone",
+        "🎈 Decoration",
+        "🎤 Music System",
+        "💡 Party Lights",
+        "📸 Photo Booth",
+        "🍕 Food Area",
+        "📶 Wi-Fi"
+    ]
+},
+
+{
+    id:12,
+    name:"Royal Heritage Convention",
+    location:"Hyderabad",
+    category:"wedding",
+    price:"₹75,000",
+    capacity:1500,
+    rating:5.0,
+    image:"https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
+    description:"A magnificent luxury venue for large weddings and high-profile celebrations.",
+    facilities:[
+        "❄️ Luxury AC",
+        "🚗 500 Car Parking",
+        "🎤 Grand Stage",
+        "🔊 Premium Audio",
+        "💡 Luxury Lighting",
+        "🍽️ Huge Dining Area",
+        "🛏️ 15 Rooms",
+        "📶 Wi-Fi",
+        "⚡ Full Backup"
+    ]
+},
+
+{
+    id:13,
+    name:"Blue Pearl Event Hall",
+    location:"Visakhapatnam",
+    category:"birthday",
+    price:"₹20,000",
+    capacity:350,
+    rating:4.4,
+    image:"https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1000&q=80",
+    description:"A modern and affordable venue for birthdays, family gatherings and small parties.",
+    facilities:[
+        "❄️ AC",
+        "🚗 Parking",
+        "🎈 Decorations",
+        "🎤 Stage",
+        "🔊 Music System",
+        "💡 Lights",
+        "🍕 Food Area",
+        "📸 Photo Booth",
+        "📶 Wi-Fi"
+    ]
+},
+
+{
+    id:14,
+    name:"Galaxy Grand Events",
+    location:"Guntur",
+    category:"corporate",
+    price:"₹42,000",
+    capacity:800,
+    rating:4.6,
+    image:"https://images.unsplash.com/photo-1503428593586-e225b39bddfe?auto=format&fit=crop&w=1000&q=80",
+    description:"A modern event center suitable for seminars, meetings and corporate gatherings.",
+    facilities:[
+        "❄️ AC",
+        "🚗 Parking",
+        "📽️ Projector",
+        "🎤 Stage",
+        "🔊 Audio",
+        "💡 Lighting",
+        "🍽️ Catering",
+        "📶 Wi-Fi",
+        "⚡ Generator"
+    ]
+},
+
+{
+    id:15,
+    name:"Golden Leaf Function Hall",
+    location:"Tirupati",
+    category:"wedding",
+    price:"₹40,000",
+    capacity:750,
+    rating:4.8,
+    image:"https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1000&q=80",
+    description:"A premium yet affordable hall with beautiful interiors for memorable weddings.",
+    facilities:[
+        "❄️ AC",
+        "🚗 Parking",
+        "🎤 Stage",
+        "🔊 Sound",
+        "💡 Lighting",
+        "🍽️ Dining",
+        "🛏️ Rooms",
+        "📶 Wi-Fi",
+        "⚡ Backup"
+    ]
+}
+
+];
+
+/* =========================================================
+   SLOT DATA
+========================================================= */
+
+const slots = [
+
+    {
+        id:"morning",
+        name:"Morning",
+        time:"9:00 AM - 1:00 PM",
+        icon:"🌅"
+    },
+
+    {
+        id:"afternoon",
+        name:"Afternoon",
+        time:"2:00 PM - 6:00 PM",
+        icon:"☀️"
+    },
+
+    {
+        id:"evening",
+        name:"Evening",
+        time:"7:00 PM - 11:00 PM",
+        icon:"🌙"
+    }
+
+];
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const hallGrid =
+    document.getElementById("hallGrid");
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const locationFilter =
+    document.getElementById("locationFilter");
+
+const capacityFilter =
+    document.getElementById("capacityFilter");
+
+const bookingHallSelect =
+    document.getElementById("bookingHallSelect");
+
+const selectedHallPreview =
+    document.getElementById("selectedHallPreview");
+
+const slotDate =
+    document.getElementById("slotDate");
+
+const slotList =
+    document.getElementById("slotList");
+
+const bookingList =
+    document.getElementById("bookingList");
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let selectedBookingHall = null;
+
+let selectedSlot = null;
+
+let bookings =
+    JSON.parse(
+        localStorage.getItem("hallifyBookings") || "[]"
+    );
+
+/* =========================================================
+   DISPLAY HALLS
+========================================================= */
+
+function displayHalls(data){
+
+    hallGrid.innerHTML="";
+
+    if(data.length===0){
+
+        hallGrid.innerHTML=`
+
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:60px;
+                background:white;
+                border-radius:20px;
+            ">
+
+                <div style="font-size:45px;">
+                    🔍
+                </div>
+
+                <h3 style="margin:15px 0;">
+                    No Function Halls Found
+                </h3>
+
+                <p style="color:#687083;">
+                    Try changing your search or filters.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+    data.forEach((hall,index)=>{
+
+        const card =
+            document.createElement("div");
+
+        card.className="hall-card reveal";
+
+        card.style.transitionDelay =
+            (index * 0.04) + "s";
+
+        card.innerHTML=`
+
+            <div class="hall-image">
+
+                <img
+                    src="${hall.image}"
+                    alt="${hall.name}"
+                    loading="lazy"
+                >
+
+                <div class="badge">
+                    Available
+                </div>
+
+                <button
+                    class="favorite"
+                    onclick="toggleFavorite(this)"
+                >
+                    ♡
+                </button>
+
+            </div>
+
+            <div class="hall-content">
+
+                <div class="hall-title-row">
+
+                    <div class="hall-title">
+                        ${hall.name}
+                    </div>
+
+                    <div class="rating">
+                        ⭐ ${hall.rating}
+                    </div>
+
+                </div>
+
+                <div class="location">
+                    📍 ${hall.location}
+                </div>
+
+                <div class="hall-features">
+
+                    <span class="mini-feature">
+                        👥 ${hall.capacity} Guests
+                    </span>
+
+                    <span class="mini-feature">
+                        ❄️ AC
+                    </span>
+
+                    <span class="mini-feature">
+                        🚗 Parking
+                    </span>
+
+                    <span class="mini-feature">
+                        🎤 Stage
+                    </span>
+
+                </div>
+
+                <div class="price-row">
+
+                    <div class="price">
+                        <strong>${hall.price}</strong>
+                        <small>/day</small>
+                    </div>
+
+                    <div class="card-buttons">
+
+                        <button
+                            class="details-btn"
+                            onclick="showDetails(${hall.id})"
+                        >
+                            Details
+                        </button>
+
+                        <button
+                            class="book-btn"
+                            onclick="startBooking(${hall.id})"
+                        >
+                            Book
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+        hallGrid.appendChild(card);
+
+    });
+
+    observeReveal();
+
+}
+
+/* =========================================================
+   POPULATE HALL SELECT
+========================================================= */
+
+function populateHallSelect(){
+
+    bookingHallSelect.innerHTML="";
+
+    halls.forEach(hall=>{
+
+        const option =
+            document.createElement("option");
+
+        option.value=hall.id;
+
+        option.textContent =
+            `${hall.name} — ${hall.location}`;
+
+        bookingHallSelect.appendChild(option);
+
+    });
+
+    selectedBookingHall=halls[0];
+
+    bookingHallSelect.value=
+        selectedBookingHall.id;
+
+    updateBookingHall();
+
+}
+
+/* =========================================================
+   UPDATE BOOKING HALL
+========================================================= */
+
+function updateBookingHall(){
+
+    if(!selectedBookingHall){
+        return;
+    }
+
+    selectedHallPreview.innerHTML=`
+
+        <img
+            src="${selectedBookingHall.image}"
+            alt="${selectedBookingHall.name}"
+        >
+
+        <h4>
+            ${selectedBookingHall.name}
+        </h4>
+
+        <p>
+            📍 ${selectedBookingHall.location}
+            &nbsp; • &nbsp;
+            👥 ${selectedBookingHall.capacity} Guests
+        </p>
+
+    `;
+
+    document.getElementById("summaryHall")
+        .textContent=
+        selectedBookingHall.name;
+
+    document.getElementById("summaryPrice")
+        .textContent=
+        selectedBookingHall.price;
+
+    renderSlots();
+
+}
+
+/* =========================================================
+   HALL SELECT CHANGE
+========================================================= */
+
+bookingHallSelect.addEventListener(
+    "change",
+    ()=>{
+
+        selectedBookingHall =
+            halls.find(
+                hall =>
+                hall.id ==
+                bookingHallSelect.value
+            );
+
+        selectedSlot=null;
+
+        updateBookingHall();
+
+    }
+);
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function getToday(){
+
+    const date=new Date();
+
+    const y=date.getFullYear();
+
+    const m=
+        String(date.getMonth()+1)
+        .padStart(2,"0");
+
+    const d=
+        String(date.getDate())
+        .padStart(2,"0");
+
+    return `${y}-${m}-${d}`;
+
+}
+
+slotDate.min=getToday();
+
+slotDate.value=getToday();
+
+slotDate.addEventListener(
+    "change",
+    ()=>{
+
+        selectedSlot=null;
+
+        updateDateSummary();
+
+        renderSlots();
+
+    }
+);
+
+/* =========================================================
+   CHECK BOOKED SLOT
+========================================================= */
+
+function isSlotBooked(date,hallId,slotId){
+
+    return bookings.some(
+        booking =>
+            booking.date===date &&
+            Number(booking.hallId)===Number(hallId) &&
+            booking.slotId===slotId
+    );
+
+}
+
+/* =========================================================
+   RENDER SLOTS
+========================================================= */
+
+function renderSlots(){
+
+    slotList.innerHTML="";
+
+    if(!slotDate.value){
+
+        slotList.innerHTML=`
+
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px;
+                color:#687083;
+            ">
+                📅 Please select a date first.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    const date=slotDate.value;
+
+    slots.forEach(slot=>{
+
+        const booked =
+            isSlotBooked(
+                date,
+                selectedBookingHall.id,
+                slot.id
+            );
+
+        const selected =
+            selectedSlot===slot.id;
+
+        const div =
+            document.createElement("div");
+
+        div.className=
+            `slot
+            ${booked ? "booked" : ""}
+            ${selected ? "selected" : ""}
+            `;
+
+        div.innerHTML=`
+
+            <div class="slot-check">
+                ✓
+            </div>
+
+            <div class="slot-icon">
+                ${slot.icon}
+            </div>
+
+            <strong>
+                ${slot.name}
+            </strong>
+
+            <span>
+                ${slot.time}
+            </span>
+
+            <div class="
+                slot-status
+                ${booked ?
+                    "booked-text" :
+                    selected ?
+                    "selected-text" :
+                    "available-text"}
+            ">
+
+                ${booked ?
+                    "🔴 Booked" :
+                    selected ?
+                    "🟣 Selected" :
+                    "🟢 Available"}
+
+            </div>
+
+        `;
+
+        if(!booked){
+
+            div.addEventListener(
+                "click",
+                ()=>{
+
+                    selectedSlot=slot.id;
+
+                    renderSlots();
+
+                    updateDateSummary();
+
+                    showToast(
+                        `${slot.name} slot selected.`,
+                        "success"
+                    );
+
+                }
+            );
+
+        }
+
+        slotList.appendChild(div);
+
+    });
+
+    updateDateSummary();
+
+}
+
+/* =========================================================
+   DATE SUMMARY
+========================================================= */
+
+function updateDateSummary(){
+
+    if(slotDate.value){
+
+        const date =
+            new Date(
+                slotDate.value+"T00:00:00"
+            );
+
+        const formatted =
+            date.toLocaleDateString(
+                "en-IN",
+                {
+                    day:"2-digit",
+                    month:"short",
+                    year:"numeric"
+                }
+            );
+
+        document.getElementById(
+            "summaryDate"
+        ).textContent=formatted;
+
+        document.getElementById(
+            "slotSelectedDate"
+        ).textContent=
+            formatted;
+
+    }else{
+
+        document.getElementById(
+            "summaryDate"
+        ).textContent="-";
+
+        document.getElementById(
+            "slotSelectedDate"
+        ).textContent=
+            "Select a date";
+
+    }
+
+    if(selectedSlot){
+
+        const slot=
+            slots.find(
+                s=>s.id===selectedSlot
+            );
+
+        document.getElementById(
+            "summarySlot"
+        ).textContent=
+            `${slot.name} (${slot.time})`;
+
+    }else{
+
+        document.getElementById(
+            "summarySlot"
+        ).textContent="-";
+
+    }
+
+}
+
+/* =========================================================
+   START BOOKING
+========================================================= */
+
+function startBooking(id){
+
+    selectedBookingHall =
+        halls.find(
+            hall=>hall.id===id
+        );
+
+    bookingHallSelect.value =
+        selectedBookingHall.id;
+
+    selectedSlot=null;
+
+    updateBookingHall();
+
+    document.getElementById(
+        "booking"
+    ).scrollIntoView({
+        behavior:"smooth"
+    });
+
+    showToast(
+        "Hall selected. Choose your date and slot.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   CONTINUE BOOKING
+========================================================= */
+
+document.getElementById(
+    "continueBookingBtn"
+).addEventListener(
+    "click",
+    ()=>{
+
+        if(!selectedBookingHall){
+
+            showToast(
+                "Please select a hall.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        if(!slotDate.value){
+
+            showToast(
+                "Please select a booking date.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        if(!selectedSlot){
+
+            showToast(
+                "Please select an available slot.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        const slot=
+            slots.find(
+                s=>s.id===selectedSlot
+            );
+
+        document.getElementById(
+            "customerBookingDetails"
+        ).innerHTML=`
+
+            <strong>
+                ${selectedBookingHall.name}
+            </strong>
+            <br>
+
+            📍 ${selectedBookingHall.location}
+            <br>
+
+            📅 ${formatDate(slotDate.value)}
+            <br>
+
+            🕐 ${slot.name} — ${slot.time}
+            <br>
+
+            💰 ${selectedBookingHall.price}
+
+        `;
+
+        openModal(
+            "customerBookingModal"
+        );
+
+    }
+);
+
+/* =========================================================
+   CONFIRM BOOKING
+========================================================= */
+
+function confirmBooking(){
+
+    const name =
+        document.getElementById(
+            "customerName"
+        ).value.trim();
+
+    const phone =
+        document.getElementById(
+            "customerPhone"
+        ).value.trim();
+
+    const eventType =
+        document.getElementById(
+            "eventType"
+        ).value;
+
+    const guests =
+        document.getElementById(
+            "guestCount"
+        ).value;
+
+    if(!name){
+
+        showToast(
+            "Please enter your name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    if(!phone || phone.length<10){
+
+        showToast(
+            "Please enter a valid phone number.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    if(!guests || Number(guests)<1){
+
+        showToast(
+            "Please enter the number of guests.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    if(
+        Number(guests) >
+        selectedBookingHall.capacity
+    ){
+
+        showToast(
+            `This hall supports up to ${selectedBookingHall.capacity} guests.`,
+            "error"
+        );
+
+        return;
+
+    }
+
+    if(
+        isSlotBooked(
+            slotDate.value,
+            selectedBookingHall.id,
+            selectedSlot
+        )
+    ){
+
+        showToast(
+            "Sorry, this slot was just booked.",
+            "error"
+        );
+
+        closeModal(
+            "customerBookingModal"
+        );
+
+        renderSlots();
+
+        return;
+
+    }
+
+    const newBooking={
+
+        id:
+            Date.now(),
+
+        hallId:
+            selectedBookingHall.id,
+
+        hallName:
+            selectedBookingHall.name,
+
+        location:
+            selectedBookingHall.location,
+
+        image:
+            selectedBookingHall.image,
+
+        date:
+            slotDate.value,
+
+        slotId:
+            selectedSlot,
+
+        slotName:
+            slots.find(
+                s=>s.id===selectedSlot
+            ).name,
+
+        slotTime:
+            slots.find(
+                s=>s.id===selectedSlot
+            ).time,
+
+        price:
+            selectedBookingHall.price,
+
+        customerName:
+            name,
+
+        phone:
+            phone,
+
+        eventType:
+            eventType,
+
+        guests:
+            Number(guests),
+
+        status:
+            "Confirmed"
+
+    };
+
+    bookings.push(newBooking);
+
+    localStorage.setItem(
+        "hallifyBookings",
+        JSON.stringify(bookings)
+    );
+
+    closeModal(
+        "customerBookingModal"
+    );
+
+    selectedSlot=null;
+
+    renderSlots();
+
+    renderBookings();
+
+    document.getElementById(
+        "customerName"
+    ).value="";
+
+    document.getElementById(
+        "customerPhone"
+    ).value="";
+
+    document.getElementById(
+        "guestCount"
+    ).value="";
+
+    setTimeout(
+        ()=>{
+            openModal(
+                "successModal"
+            );
+        },
+        300
+    );
+
+}
+
+/* =========================================================
+   RENDER BOOKINGS
+========================================================= */
+
+function renderBookings(){
+
+    bookingList.innerHTML="";
+
+    if(bookings.length===0){
+
+        bookingList.innerHTML=`
+
+            <div class="empty-bookings">
+
+                <div class="empty-icon">
+                    📅
+                </div>
+
+                <h3>
+                    No Bookings Yet
+                </h3>
+
+                <p>
+                    Your confirmed function hall bookings
+                    will appear here.
+                </p>
+
+                <a
+                    href="#halls"
+                    class="primary-btn"
+                >
+                    Explore Halls
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    [...bookings]
+        .reverse()
+        .forEach(booking=>{
+
+            const card =
+                document.createElement("div");
+
+            card.className="booking-card";
+
+            card.innerHTML=`
+
+                <img
+                    class="booking-thumb"
+                    src="${booking.image}"
+                    alt="${booking.hallName}"
+                >
+
+                <div class="booking-info">
+
+                    <div class="booking-status">
+                        ✓ ${booking.status}
+                    </div>
+
+                    <h4>
+                        ${booking.hallName}
+                    </h4>
+
+                    <p>
+                        📍 ${booking.location}
+                    </p>
+
+                    <p>
+                        📅 ${formatDate(booking.date)}
+                    </p>
+
+                    <p>
+                        🕐 ${booking.slotName}
+                        — ${booking.slotTime}
+                    </p>
+
+                    <p>
+                        👥 ${booking.guests} Guests
+                        &nbsp; • &nbsp;
+                        🎉 ${booking.eventType}
+                    </p>
+
+                    <p>
+                        💰 ${booking.price}
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <button
+                        class="cancel-btn"
+                        onclick="cancelBooking(${booking.id})"
+                    >
+                        Cancel Booking
+                    </button>
+
+                </div>
+
+            `;
+
+            bookingList.appendChild(card);
+
+        });
+
+}
+
+/* =========================================================
+   CANCEL BOOKING
+========================================================= */
+
+function cancelBooking(id){
+
+    const confirmCancel =
+        confirm(
+            "Are you sure you want to cancel this booking?"
+        );
+
+    if(!confirmCancel){
+        return;
+    }
+
+    bookings =
+        bookings.filter(
+            booking=>booking.id!==id
+        );
+
+    localStorage.setItem(
+        "hallifyBookings",
+        JSON.stringify(bookings)
+    );
+
+    renderBookings();
+
+    renderSlots();
+
+    showToast(
+        "Booking cancelled successfully.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatDate(dateString){
+
+    const date =
+        new Date(
+            dateString+"T00:00:00"
+        );
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day:"2-digit",
+            month:"short",
+            year:"numeric"
+        }
+    );
+
+}
+
+/* =========================================================
+   HALL DETAILS
+========================================================= */
+
+function showDetails(id){
+
+    const hall =
+        halls.find(
+            h=>h.id===id
+        );
+
+    if(!hall){
+        return;
+    }
+
+    document.getElementById(
+        "modalImage"
+    ).src=hall.image;
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent=hall.name;
+
+    document.getElementById(
+        "modalLocation"
+    ).innerHTML=
+        `📍 ${hall.location}
+        • 👥 ${hall.capacity} Guests`;
+
+    document.getElementById(
+        "modalRating"
+    ).textContent=
+        `⭐ ${hall.rating}/5`;
+
+    document.getElementById(
+        "modalDescription"
+    ).textContent=
+        hall.description;
+
+    document.getElementById(
+        "modalPrice"
+    ).textContent=
+        `${hall.price} / Day`;
+
+    const facilityGrid =
+        document.getElementById(
+            "facilityGrid"
+        );
+
+    facilityGrid.innerHTML="";
+
+    hall.facilities.forEach(
+        facility=>{
+
+            const div =
+                document.createElement("div");
+
+            div.className="facility";
+
+            div.textContent=facility;
+
+            facilityGrid.appendChild(div);
+
+        }
+    );
+
+    document.getElementById(
+        "modalBookButton"
+    ).onclick=()=>{
+
+        closeModal(
+            "detailsModal"
+        );
+
+        startBooking(
+            hall.id
+        );
+
+    };
+
+    openModal(
+        "detailsModal"
+    );
+
+}
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+function openModal(id){
+
+    document.getElementById(id)
+        .classList.add("active");
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+}
+
+function closeModal(id){
+
+    document.getElementById(id)
+        .classList.remove("active");
+
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+}
+
+document.querySelectorAll(".modal")
+.forEach(modal=>{
+
+    modal.addEventListener(
+        "click",
+        event=>{
+
+            if(event.target===modal){
+
+                closeModal(
+                    modal.id
+                );
+
+            }
+
+        }
+    );
+
+});
+
+/* =========================================================
+   FAVORITE
+========================================================= */
+
+function toggleFavorite(button){
+
+    button.classList.toggle(
+        "liked"
+    );
+
+    if(
+        button.classList.contains(
+            "liked"
+        )
+    ){
+
+        button.textContent="♥";
+
+        showToast(
+            "Added to favorites ❤️",
+            "success"
+        );
+
+    }else{
+
+        button.textContent="♡";
+
+        showToast(
+            "Removed from favorites.",
+            "success"
+        );
+
+    }
+
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function filterHalls(){
+
+    const activeCategory =
+        document.querySelector(
+            ".filter-btn.active"
+        ).dataset.category;
+
+    const search =
+        searchInput.value
+        .toLowerCase()
+        .trim();
+
+    const location =
+        locationFilter.value;
+
+    const capacity =
+        capacityFilter.value;
+
+    const filtered =
+        halls.filter(
+            hall=>{
+
+                const categoryMatch =
+                    activeCategory==="all" ||
+                    hall.category===activeCategory;
+
+                const searchMatch =
+                    hall.name
+                    .toLowerCase()
+                    .includes(search) ||
+
+                    hall.location
+                    .toLowerCase()
+                    .includes(search);
+
+                const locationMatch =
+                    location==="all" ||
+                    hall.location===location;
+
+                const capacityMatch =
+                    capacity==="all" ||
+                    hall.capacity>=
+                    Number(capacity);
+
+                return(
+                    categoryMatch &&
+                    searchMatch &&
+                    locationMatch &&
+                    capacityMatch
+                );
+
+            }
+        );
+
+    displayHalls(
+        filtered
+    );
+
+}
+
+searchInput.addEventListener(
+    "input",
+    filterHalls
+);
+
+locationFilter.addEventListener(
+    "change",
+    filterHalls
+);
+
+capacityFilter.addEventListener(
+    "change",
+    filterHalls
+);
+
+document.getElementById(
+    "searchButton"
+).addEventListener(
+    "click",
+    ()=>{
+
+        document.getElementById(
+            "halls"
+        ).scrollIntoView({
+            behavior:"smooth"
+        });
+
+    }
+);
+
+/* =========================================================
+   CATEGORY FILTER
+========================================================= */
+
+document.querySelectorAll(
+    ".filter-btn"
+).forEach(button=>{
+
+    button.addEventListener(
+        "click",
+        ()=>{
+
+            document.querySelectorAll(
+                ".filter-btn"
+            ).forEach(
+                btn =>
+                btn.classList.remove(
+                    "active"
+                )
+            );
+
+            button.classList.add(
+                "active"
+            );
+
+            filterHalls();
+
+        }
+    );
+
+});
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+window.addEventListener(
+    "scroll",
+    ()=>{
+
+        const navbar =
+            document.getElementById(
+                "navbar"
+            );
+
+        if(window.scrollY>50){
+
+            navbar.classList.add(
+                "scrolled"
+            );
+
+        }else{
+
+            navbar.classList.remove(
+                "scrolled"
+            );
+
+        }
+
+    }
+);
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+document.getElementById(
+    "menuBtn"
+).addEventListener(
+    "click",
+    ()=>{
+
+        document.getElementById(
+            "navLinks"
+        ).classList.toggle(
+            "active"
+        );
+
+    }
+);
+
+document.querySelectorAll(
+    ".nav-links a"
+).forEach(
+    link=>{
+
+        link.addEventListener(
+            "click",
+            ()=>{
+                document.getElementById(
+                    "navLinks"
+                ).classList.remove(
+                    "active"
+                );
+            }
+        );
+
+    }
+);
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message,type="success"){
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+    const toast =
+        document.createElement("div");
+
+    toast.className=
+        `toast ${type}`;
+
+    toast.textContent=message;
+
+    container.appendChild(
+        toast
+    );
+
+    setTimeout(
+        ()=>{
+            toast.style.opacity="0";
+            toast.style.transform=
+                "translateX(30px)";
+
+            setTimeout(
+                ()=>{
+                    toast.remove();
+                },
+                300
+            );
+
+        },
+        3000
+    );
+
+}
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+
+function observeReveal(){
+
+    const elements =
+        document.querySelectorAll(
+            ".reveal:not(.show)"
+        );
+
+    const observer =
+        new IntersectionObserver(
+            entries=>{
+
+                entries.forEach(
+                    entry=>{
+
+                        if(
+                            entry.isIntersecting
+                        ){
+
+                            entry.target
+                                .classList
+                                .add("show");
+
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold:.1
+            }
+        );
+
+    elements.forEach(
+        element =>
+        observer.observe(element)
+    );
+
+}
+
+/* =========================================================
+   SCROLL TO BOOKINGS
+========================================================= */
+
+function scrollToBookings(){
+
+    document.getElementById(
+        "myBookings"
+    ).scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+function initialize(){
+
+    displayHalls(
+        halls
+    );
+
+    populateHallSelect();
+
+    renderSlots();
+
+    renderBookings();
+
+    observeReveal();
+
+}
+
+initialize();
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+window.addEventListener(
+    "load",
+    ()=>{
+
+        setTimeout(
+            ()=>{
+                document.getElementById(
+                    "loader"
+                ).classList.add(
+                    "hide"
+                );
+            },
+            700
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
