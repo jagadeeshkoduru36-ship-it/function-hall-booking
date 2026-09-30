@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: function-hall-java-api
+    runtime: docker
+    rootDir: java-backend
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: function-hall-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: function-hall-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: function-hall-db
+          property: password
+
+  - type: web
+    name: function-hall-node-service
+    runtime: node
+    rootDir: node-service
+    buildCommand: npm install
+    startCommand: npm start
+
+  - type: web
+    name: function-hall-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+
+databases:
+  - name: function-hall-db
+    plan: free
